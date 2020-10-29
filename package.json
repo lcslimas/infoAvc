@@ -1,0 +1,27 @@
+{
+  "name": "infograficoavc",
+  "version": "0.0.1",
+  "description": "Projeto para Rede Cuida AVC infográfico informativo interativo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lcslimas/infoAvc.git"
+  },
+  "keywords": [
+    "javascript",
+    "phaser",
+    "bootstrap"
+  ],
+  "author": "Nox",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lcslimas/infoAvc/issues"
+  },
+  "homepage": "https://github.com/lcslimas/infoAvc#readme",
+  "dependencies": {
+    "phaser-ce": "^2.16.0"
+  }
+}
