@@ -3,7 +3,7 @@
 <head> 
 	<meta charset="UTF-8" />
 	<title>Phaser - Making your first game, part 1</title>
-    <script src="//cdn.jsdelivr.net/phaser/2.2.2/phaser.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/phaser@3.24.1/dist/phaser.js"></script>
     <style type="text/css">
         body {
             margin: 0;
@@ -14,25 +14,64 @@
 
 <script type="text/javascript">
 
-var game = new Phaser.Game('100%','100%', Phaser.AUTO, '', { preload: preload, create: create, update: update });
-function preload() {
-    this.scale.scaleMode = Phaser.ScaleManager.RESIZE;
-    this.stage.backgroundColor = 0x0C0C1F;
-    game.load.image('ambulancia', 'assets/ambulancia.svg');
-    window.addEventListener('resize', function () {  resize() ;});
 
-}
+    var config = {
+        type: Phaser.AUTO,
+        width: 1280,
+        height: 720,
+        physics: {
+        	default: 'arcade',
+        	arcade: {
+        		debug: true
+        	}
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
 
-function create() {
-}
+    var game = new Phaser.Game(config);
 
-function update() {
-}
+    function preload ()
+    {
 
-function resize(){
-    const ambulancia = game.add.image(100, 100, 'ambulancia');
-    ambulancia.scale.setTo(game.width/1280);
-}
+        this.load.svg('ambulancia', 'assets/ambulancia.svg',{scale: 0.5});
+        this.load.svg('hospital', 'assets/hospital.svg', {scale: 0.5});
+        this.load.svg('relogio', 'assets/relogio.svg', {scale: 0.5});
+        this.load.svg('sintoma', 'assets/sintoma.svg', {scale: 0.5});
+	}
+    function create ()
+    {
+    	var elementos = this.physics.add.group({
+        bounceX: 1,
+        bounceY: 1,
+        // collideWorldBounds: true
+    });
+    	// this.add.image(300, 300, 'ambulancia');
+    	createGroup(elementos)
+    }
+
+    function update ()
+    {
+    }
+
+    function createGroup(elementos){
+    	var arrElementos = [
+    	[400, 200, 'ambulancia'],
+    	[1200, 700, 'hospital'],
+    	[100, 350, 'relogio'],
+    	[500, 100, 'sintoma']]
+
+
+    	for (var elemento of arrElementos){
+    		var el = elementos.create(elemento[0],elemento[1],elemento[2])
+    		
+    	}
+
+    }
+
 </script>
 
 </body>
