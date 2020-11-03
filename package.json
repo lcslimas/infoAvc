@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/lcslimas/infoAvc#readme",
   "dependencies": {
-    "phaser-ce": "^2.16.0"
+    "eslint": "^7.12.1",
+    "phaser-ce": "^2.16.0",
+    "prettier": "^2.1.2"
   }
 }

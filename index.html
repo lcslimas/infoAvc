@@ -17,8 +17,12 @@
 
     var config = {
         type: Phaser.AUTO,
+        scale: {
+        mode: Phaser.Scale.RESIZE,
+        autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1280,
         height: 720,
+        },
         physics: {
         	default: 'arcade',
         	arcade: {
@@ -33,41 +37,69 @@
     };
 
     var game = new Phaser.Game(config);
-
+    
     function preload ()
     {
-
-        this.load.svg('ambulancia', 'assets/ambulancia.svg',{scale: 0.5});
-        this.load.svg('hospital', 'assets/hospital.svg', {scale: 0.5});
-        this.load.svg('relogio', 'assets/relogio.svg', {scale: 0.5});
-        this.load.svg('sintoma', 'assets/sintoma.svg', {scale: 0.5});
+        this.load.svg('ambulancia', 'assets/ambulancia.svg',{scale: 1});
+        this.load.svg('hospital', 'assets/hospital.svg', {scale: 1});
+        this.load.svg('relogio', 'assets/relogio.svg', {scale: 1});
+        this.load.svg('sintoma1', 'assets/sintoma1.svg', {scale: 1});
+        this.load.svg('sintoma2', 'assets/sintoma2.svg', {scale: 1});
+        this.load.svg('sintoma3', 'assets/sintoma3.svg', {scale: 1});
+        this.load.svg('sintoma4', 'assets/sintoma4.svg', {scale: 1});
+        this.load.svg('seta', 'assets/seta.svg', {scale: 0.9});
+        this.load.svg('muro', 'assets/muro.svg', {scale: 1});
 	}
     function create ()
     {
-    	var elementos = this.physics.add.group({
-        bounceX: 1,
-        bounceY: 1,
-        // collideWorldBounds: true
-    });
-    	// this.add.image(300, 300, 'ambulancia');
-    	createGroup(elementos)
+        var desktop = this.sys.canvas.width > 769 ; 
+        var elementos = this.add.group();
+        createGroupElements(elementos);
+        var arrTxtSintomas = [
+        ['sintoma1','Dificuldade\nna Visão'],
+        ['sintoma2','Dificuldade\nao Falar'] ,
+        ['sintoma3','Braço sem\nforça'], 
+        ['sintoma4','Perna sem\nforça']] 
+        var i = 0;
+        for(var sintoma of arrTxtSintomas){
+            var xImagemSintoma = (game.canvas.clientWidth/4) * i
+            var sin = this.add.image(xImagemSintoma+10, 350, sintoma[0]).setOrigin(0,0.5);
+            var txt = this.add.text(xImagemSintoma + 10, 470, sintoma[1], {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'})
+            console.log(sin)
+            i++
+        }
+
+        for(var j = 0 ; j<4 ; j++){
+            var sin = this.add.image(750, 650 +  200 * j, 'seta');
+            var txt = this.add.text(750, 650 + 200 * j, 'teste', {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'}).setOrigin(0.5,0.5)
+            console.log(j)
+        }
+        
     }
 
     function update ()
     {
     }
 
-    function createGroup(elementos){
+    function createGroupElements(elementos){
+        var alturaTela = game.canvas.clientHeight
+        var metadeAlturaTela = alturaTela/2
+        var larguraTela = game.canvas.clientWidth
+        var yRelogio = metadeAlturaTela + 150
+        var xHospital = larguraTela-550
+        var yHospital = alturaTela-180
+        var yAmbulancia = yRelogio -290
+
     	var arrElementos = [
-    	[400, 200, 'ambulancia'],
-    	[1200, 700, 'hospital'],
-    	[100, 350, 'relogio'],
-    	[500, 100, 'sintoma']]
+    	[0, alturaTela-50, 'muro'],
+    	[310, yAmbulancia, 'ambulancia'],
+    	[xHospital, yHospital, 'hospital'],
+    	[0, yRelogio, 'relogio']]
 
 
     	for (var elemento of arrElementos){
-    		var el = elementos.create(elemento[0],elemento[1],elemento[2])
-    		
+    		var el = elementos.create(elemento[0],elemento[1],elemento[2]).setOrigin(0, 0.5)
+    		console.log(el)
     	}
 
     }
