@@ -15,7 +15,7 @@
 <script type="text/javascript">
 
 
-    var config = {
+    config = {
         type: Phaser.AUTO,
         scale: {
         mode: Phaser.Scale.RESIZE,
@@ -26,7 +26,7 @@
         physics: {
         	default: 'arcade',
         	arcade: {
-        		debug: true
+        		debug: false
         	}
         },
         scene: {
@@ -36,45 +36,102 @@
         }
     };
 
-    var game = new Phaser.Game(config);
+    game = new Phaser.Game(config);
     
     function preload ()
     {
         this.load.svg('ambulancia', 'assets/ambulancia.svg',{scale: 1});
         this.load.svg('hospital', 'assets/hospital.svg', {scale: 1});
-        this.load.svg('relogio', 'assets/relogio.svg', {scale: 1});
+        this.load.svg('relogio', 'assets/relogio.svg', {scale: 0.85});
         this.load.svg('sintoma1', 'assets/sintoma1.svg', {scale: 1});
         this.load.svg('sintoma2', 'assets/sintoma2.svg', {scale: 1});
         this.load.svg('sintoma3', 'assets/sintoma3.svg', {scale: 1});
         this.load.svg('sintoma4', 'assets/sintoma4.svg', {scale: 1});
-        this.load.svg('seta', 'assets/seta.svg', {scale: 0.9});
+        this.load.svg('seta', 'assets/seta.svg', {scale: 0.87});
         this.load.svg('muro', 'assets/muro.svg', {scale: 1});
 	}
     function create ()
     {
-        var desktop = this.sys.canvas.width > 769 ; 
-        var elementos = this.add.group();
+        desktop = this.sys.canvas.width > 769 ; 
+
+        elementos = this.physics.add.group({
+            key:  'elementos'
+        });
         createGroupElements(elementos);
-        var arrTxtSintomas = [
+
+        txtTitulo = this.add.text(30, 30,'AVC', 
+        {fontFamily: 'Caviar Dreams', fontSize: 128, color: '#E9B00C', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+        txtDescTitulo = this.add.text(330, 30,'Se tiver algum desses sintomas...',
+        {fontFamily: 'Caviar Dreams', fontSize: 40, color: '#fff', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+        txtSubDescTitulo = this.add.text(330, 100,'Busque ajuda rápido!', 
+        {fontFamily: 'Caviar Dreams', fontSize: 60, color: '#fff', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+
+        txtRelogio = this.add.text(50, game.canvas.clientHeight/2 -25 ,'Maiores\nchances de\nrecuperação\nnas primeiras\n4 horas dos\n     sinais.', 
+        {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+        
+        txtPerder = this.add.text(30,game.canvas.clientHeight - 332 ,'Perder\nPerder ', 
+        {fontFamily: 'Caviar Dreams', fontSize: 40, color: '#fff', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+        txtTempo = this.add.text(160, game.canvas.clientHeight - 350 ,'TEMPO\nCÉREBRO ', 
+        {fontFamily: 'Caviar Dreams', fontSize: 50, color: '#E9B00C', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+        txtEh = this.add.text(350, game.canvas.clientHeight - 332 ,'é\n   .', 
+        {fontFamily: 'Caviar Dreams', fontSize: 40, color: '#fff', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+
+        txtSamu = this.add.text(30, game.canvas.clientHeight -150 ,'SAMU - 192', 
+        {fontFamily: 'Caviar Dreams', fontSize: 70, color: '#E72A33', fontStyle: 'bold'}
+        ).setOrigin(0,0)
+
+        arrTxtSintomas = [
         ['sintoma1','Dificuldade\nna Visão'],
         ['sintoma2','Dificuldade\nao Falar'] ,
         ['sintoma3','Braço sem\nforça'], 
         ['sintoma4','Perna sem\nforça']] 
-        var i = 0;
-        for(var sintoma of arrTxtSintomas){
-            var xImagemSintoma = (game.canvas.clientWidth/4) * i
-            var sin = this.add.image(xImagemSintoma+10, 350, sintoma[0]).setOrigin(0,0.5);
-            var txt = this.add.text(xImagemSintoma + 10, 470, sintoma[1], {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'})
-            console.log(sin)
+        i = 0;
+        for(sintoma of arrTxtSintomas){
+            xImagemSintoma = (game.canvas.clientWidth/4) * i
+            sin = this.physics.add.image(xImagemSintoma+10, 350, sintoma[0]).setOrigin(0,0.5);
+            txt = this.add.text(xImagemSintoma + 10, 470, sintoma[1], 
+            {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'}
+            ).setOrigin(-0.2,0)
             i++
         }
+        setas = this.physics.add.group({
+            key:  'elementos'
+        });
+        setas.enableBody = true;
+        arrTxtSetas = ['Não tome remédios\npor conta própria',
+        'Ligue para o\nSAMU - 192',
+         'Se o SAMU demorar,\nVá ao HOSPITAL mais\nperto da sua casa.',
+         'Se o hospital for\nlonge, vá para a \nUPA mais próxima.']
 
-        for(var j = 0 ; j<4 ; j++){
-            var sin = this.add.image(750, 650 +  200 * j, 'seta');
-            var txt = this.add.text(750, 650 + 200 * j, 'teste', {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'}).setOrigin(0.5,0.5)
-            console.log(j)
+        for(j = 0 ; j<4 ; j++){
+            seta = setas.create(game.canvas.clientWidth-260, game.canvas.clientHeight/2 -180 +  (180 * j), 'seta');
+            if(j%2==0){
+                seta.setTint(7377090)
+            } 
+            txt = this.add.text(seta.x, game.canvas.clientHeight/2 -180 +  (180 * j), arrTxtSetas[j] , {fontFamily: 'Caviar Dreams', fontSize: 28, color: '#fff', fontStyle: 'bold'}).setOrigin(0.5,0.5)
+            // txt.setBounds(seta.width, seta.height)
+            setas.add(txt)
         }
+
         
+
+        elementos.collideWorldBounds = true;
+        setas.collideWorldBounds = true;
+        ambulancia = elementos.children.entries[2]
+        hospital = elementos.children.entries[3]
+        this.physics.add.collider(ambulancia,setas,function (elementos, setas){
+            setas.x += 50;
+        })
+        this.physics.add.collider(ambulancia,hospital,function (ambulancia, hospital){
+            ambulancia.destroy()
+        })
     }
 
     function update ()
@@ -82,24 +139,32 @@
     }
 
     function createGroupElements(elementos){
-        var alturaTela = game.canvas.clientHeight
-        var metadeAlturaTela = alturaTela/2
-        var larguraTela = game.canvas.clientWidth
-        var yRelogio = metadeAlturaTela + 150
-        var xHospital = larguraTela-550
-        var yHospital = alturaTela-180
-        var yAmbulancia = yRelogio -290
+        alturaTela = game.canvas.clientHeight
+        metadeAlturaTela = alturaTela/2
+        larguraTela = game.canvas.clientWidth
+        yRelogio = metadeAlturaTela + 150
+        xHospital = larguraTela-530
+        yHospital = alturaTela-180
+        yAmbulancia = yRelogio -280
+        yMuro = alturaTela-109
 
-    	var arrElementos = [
-    	[0, alturaTela-50, 'muro'],
-    	[310, yAmbulancia, 'ambulancia'],
+    	arrElementos = [
+    	[0, yMuro, 'muro'],
+    	[220, yAmbulancia, 'ambulancia'],
     	[xHospital, yHospital, 'hospital'],
     	[0, yRelogio, 'relogio']]
 
 
-    	for (var elemento of arrElementos){
-    		var el = elementos.create(elemento[0],elemento[1],elemento[2]).setOrigin(0, 0.5)
-    		console.log(el)
+    	for (elemento of arrElementos){
+    		el = elementos.create(elemento[0],elemento[1],elemento[2]).setOrigin(0, 0.5)
+            if(elemento[2] === 'ambulancia'){
+    		    ambulancia = el;
+                ambulancia.setInteractive({ draggable: true })
+                .on('drag', function(pointer, dragX, dragY){
+                    ambulancia.setPosition(dragX, dragY);
+                })
+            }
+            console.log(el)
     	}
 
     }
